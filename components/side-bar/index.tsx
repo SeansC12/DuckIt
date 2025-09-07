@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
 import TopicItem from "./topic-item";
+import CreateTopicButton from "./createTopicButton";
 
 export default async function Sidebar() {
   const supabase = await createClient();
-  const { data: topics, error } = await supabase.from("topics").select();
+  const { data: topics, error } = await supabase.from("topics").select().order('created_at', { ascending: false });
 
   if (error) {
     return <div>Error loading topics</div>;
@@ -17,8 +18,9 @@ export default async function Sidebar() {
       </div>
 
       <div className="space-y-3 mb-8">
+        <CreateTopicButton />
         <button className="w-full py-2 px-3 hover:bg-neutral-900 border-[1px] border-yellow-600 rounded-lg transition-colors text-left">
-          New Topic
+          Search Topics
         </button>
       </div>
 
