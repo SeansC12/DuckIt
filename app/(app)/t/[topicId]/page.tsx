@@ -22,12 +22,23 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
 import FileItem from "@/components/file-item";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 // Import icons
-import { Import, MonitorSmartphone, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Import,
+  Loader2Icon,
+  MonitorSmartphone,
+  Trash2,
+  XIcon,
+} from "lucide-react";
 import { FaGoogleDrive, FaStop, FaPlay } from "react-icons/fa";
 
 // Speech Recognition
@@ -42,26 +53,6 @@ import { Howl } from "howler";
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 
 import { TextFile } from "@/lib/TextFile";
-import { Input } from "@/components/ui/input";
-
-const TEST_FILES: TextFile[] = [
-  {
-    name: "math.txt",
-    content: ` Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-`,
-    id: "0",
-  },
-  {
-    name: "more math.txt",
-    content: "live laugh love math",
-    id: "1",
-  },
-];
 
 const ANIMATION_SPEED = 100;
 const TALKING_TIMEOUT = 1000;
@@ -101,7 +92,7 @@ export default function TopicDetailedPage({
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // google drive integration
-  const [files, setFiles] = useState(TEST_FILES);
+  const [files, setFiles] = useState<TextFile[]>([]);
   const URL_PLACEHOLDER = "https://drive.google.com/file/d/...";
   // "https://drive.google.com/file/d/1jnvYxbkM9ALR-DZPD_5cvVhJHwqQ1xpu/view?usp=share_link";
   const [url, setUrl] = useState(URL_PLACEHOLDER);
@@ -109,6 +100,8 @@ export default function TopicDetailedPage({
   const [error, setError] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [fileName, setFileName] = useState("Untitled.txt");
+  // for the aler that pops up upon successful file upload
+  const [successAlert, setSuccessAlert] = useState(false);
 
   // Initialise audio
   useEffect(() => {
@@ -243,7 +236,7 @@ export default function TopicDetailedPage({
 
     // if fileName is empty
     if (fileName == "") {
-      alert("File name cannot be empty");
+      setError("File name cannot be empty.");
       return;
     }
 
@@ -270,8 +263,8 @@ export default function TopicDetailedPage({
 
         // close the dialog box
         setDialogOpen(false);
-
-        alert("File uploaded successfully!");
+        setSuccessAlert(true);
+        // alert("File uploaded successfully!");
       } else {
         setError(result.error || "Upload failed");
       }
@@ -298,6 +291,25 @@ export default function TopicDetailedPage({
 
   return (
     <div className="flex space-y-8 items-center flex-col w-full max-w-[1600px]">
+      {successAlert && (
+        <Alert
+          variant="default"
+          className="w-full max-w-md fixed top-5 right-5 z-[100] flex justify-between items-center"
+        >
+          <div className="flex gap-4 items-center">
+            <CheckCircle size={20} />
+            <AlertTitle>File Uploaded Successfully!</AlertTitle>
+          </div>
+          <Button
+            className="hover:bg-transparent"
+            onClick={() => setSuccessAlert(false)}
+            variant={"ghost"}
+          >
+            <XIcon />
+          </Button>
+        </Alert>
+      )}
+
       <div
         className={`w-70 h-70 rounded-full bg-background border-4 transition-colors duration-200 ${
           recordingState.isTalking
@@ -318,11 +330,9 @@ export default function TopicDetailedPage({
           priority
         />
       </div>
-
       <p className="text-4xl font-bold mb-4">
         {formatTime(recordingState.time)}
       </p>
-
       <Button
         className="bg-[#ffc300] hover:bg-[#e6b800] w-64 h-16 text-lg rounded-2xl !transition-all"
         onClick={recordingState.isRecording ? stopRecording : startRecording}
@@ -334,9 +344,7 @@ export default function TopicDetailedPage({
         )}
         {recordingState.isRecording ? "End session" : "Start a new session"}
       </Button>
-
       <hr className="w-full border-t-[0.5px] border-border my-8" />
-
       <div className="w-full max-w-[1600px]">
         {recordingState.isRecording ? (
           <div className="bg-neutral-900 p-6 rounded-lg min-h-[120px] transition-all transition-discrete">
@@ -395,6 +403,15 @@ export default function TopicDetailedPage({
                         "anyone with the link". Only .txt files are allowed for
                         the time being.
                       </DialogDescription>
+                      {error != "" && (
+                        <Alert
+                          variant="destructive"
+                          className="w-full max-w-md"
+                        >
+                          <AlertCircle />
+                          <AlertTitle>{error}</AlertTitle>
+                        </Alert>
+                      )}
                     </DialogHeader>
                     <div className="grid gap-5 mb-3">
                       <div>
@@ -416,23 +433,37 @@ export default function TopicDetailedPage({
                       <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
                       </DialogClose>
-                      <Button onClick={handleSubmit}>Add</Button>
+                      {loading ? (
+                        <Button size="sm" disabled>
+                          <Loader2Icon className="animate-spin" />
+                          Adding
+                        </Button>
+                      ) : (
+                        <Button onClick={handleSubmit}>Add</Button>
+                      )}
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </div>
               <div className="mt-2 space-y-3">
-                {files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center"
-                  >
-                    <FileItem fileName={file.name} fileContent={file.content} />
-                    <Button variant="secondary" size="sm">
-                      <Trash2 className="w-4 h-4" color="#FF383C" />
-                    </Button>
-                  </div>
-                ))}
+                {files.length == 0 ? (
+                  <p>No files added yet. Import files to provide context.</p>
+                ) : (
+                  files.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      <FileItem
+                        fileName={file.name}
+                        fileContent={file.content}
+                      />
+                      <Button variant="secondary" size="sm">
+                        <Trash2 className="w-4 h-4" color="#FF383C" />
+                      </Button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
