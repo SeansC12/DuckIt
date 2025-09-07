@@ -1,5 +1,4 @@
 import { Session } from "@/lib/Session";
-import FileItem from "./file-item";
 import FeedbackItem from "./feedback-item";
 
 export default function SummaryDetails({ session }: { session: Session }) {
@@ -18,12 +17,6 @@ export default function SummaryDetails({ session }: { session: Session }) {
     <div className="mt-10 space-y-8">
       <h2 className="text-2xl font-bold">{session.name}</h2>
       <p>Date: {session.date.toDateString()}</p>
-      {/* list of files */}
-      <div className="grid gap-4">
-        {session.files.map((item, i) => (
-          <FileItem key={i} fileName={item} />
-        ))}
-      </div>
 
       <div className="flex justify-between">
         <div>
