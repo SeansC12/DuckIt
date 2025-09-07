@@ -2,13 +2,11 @@ import { Dispatch, SetStateAction } from "react";
 
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import FileItem from "./file-item";
 import { Button } from "./ui/button";
 import { Session } from "@/lib/Session";
 
