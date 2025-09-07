@@ -53,8 +53,6 @@ ${rawTranscription.trim()}
 Please provide the fixed transcription as markdown. Reminder that PRESERVING THE ORIGINAL TRANSCRIPT'S MEANING IS VERY IMPORTANT, and you should NOT ADD ANY CONTENT that was not in the original transcript:`;
     }
 
-    console.log("Generated prompt:", prompt);
-
     const result = await generateText({
       model,
       prompt,
