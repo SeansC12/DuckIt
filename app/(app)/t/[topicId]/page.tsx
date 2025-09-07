@@ -3,7 +3,6 @@
 import { use, useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 
 // Import components
 import { Button } from "@/components/ui/button";
@@ -14,20 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import FileItem from "@/components/file-item";
-import SummaryDetails from "@/components/summary-detail";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 // Import icons
-import {
-  ArrowLeft,
-  Import,
-  LayoutGrid,
-  LayoutList,
-  Mic,
-  MonitorSmartphone,
-  Trash2,
-} from "lucide-react";
+import { Import, MonitorSmartphone, Trash2 } from "lucide-react";
 import { FaGoogleDrive, FaStop, FaPlay } from "react-icons/fa";
 
 // Speech Recognition
@@ -35,23 +25,13 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
-// Audio 
+// Audio
 import { Howl } from "howler";
-        
+
 // Animation
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 
 import { TextFile } from "@/lib/TextFile";
-        
-const test_summary: Summary = {
-  id: "0",
-  feedback:
-    "(+) Lorem ipsum dolor sit amet, consectetur adipiscing elit\n(-)Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  hesitations: 6,
-  fillerWords: 12,
-  transcript:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
-};
 
 const TEST_FILES: TextFile[] = [
   {
@@ -67,37 +47,6 @@ const TEST_FILES: TextFile[] = [
   {
     name: "more math.txt",
     content: "live laugh love math",
-  },
-];
-
-const TEST_SESSIONS: Session[] = [
-  {
-    id: "0",
-    name: "Session 1",
-    date: new Date(),
-    files: TEST_FILES,
-    summary: test_summary,
-  },
-  {
-    id: "1",
-    name: "Session 2",
-    date: new Date(),
-    files: TEST_FILES,
-    summary: test_summary,
-  },
-  {
-    id: "2",
-    name: "Session 3",
-    date: new Date(),
-    files: TEST_FILES,
-    summary: test_summary,
-  },
-  {
-    id: "3",
-    name: "Session 3",
-    date: new Date(),
-    files: TEST_FILES,
-    summary: test_summary,
   },
 ];
 
