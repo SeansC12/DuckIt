@@ -404,9 +404,9 @@ export default function TopicDetailedPage({
                     <DialogHeader>
                       <DialogTitle>Add Google Drive File</DialogTitle>
                       <DialogDescription>
-                        Make sure that your file's view permissions are set to
+                        {`Make sure that your file's view permissions are set to
                         "anyone with the link". Only .txt files are allowed for
-                        the time being.
+                        the time being.`}
                       </DialogDescription>
                       {error != "" && (
                         <Alert

@@ -1,5 +1,3 @@
-import { TextFile } from "./TextFile";
-
 // sample url: https://drive.google.com/file/d/1jnvYxbkM9ALR-DZPD_5cvVhJHwqQ1xpu/view?usp=share_link
 // export fileId from google drive link
 export function extractFileIdFromUrl(url: string) {
