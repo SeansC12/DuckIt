@@ -12,12 +12,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
 import FileItem from "@/components/file-item";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 // Import icons
-import { Import, MonitorSmartphone, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Import,
+  Loader2Icon,
+  MonitorSmartphone,
+  Trash2,
+  XIcon,
+} from "lucide-react";
 import { FaGoogleDrive, FaStop, FaPlay } from "react-icons/fa";
 
 // Speech Recognition
@@ -32,23 +53,6 @@ import { Howl } from "howler";
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 
 import { TextFile } from "@/lib/TextFile";
-
-const TEST_FILES: TextFile[] = [
-  {
-    name: "math.txt",
-    content: ` Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-    Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-`,
-  },
-  {
-    name: "more math.txt",
-    content: "live laugh love math",
-  },
-];
 
 const ANIMATION_SPEED = 100;
 const TALKING_TIMEOUT = 1000;
@@ -67,7 +71,6 @@ export default function TopicDetailedPage({
 }) {
   const { topicId } = use(params);
   const router = useRouter();
-  const files = TEST_FILES;
 
   const {
     transcript,
@@ -87,6 +90,18 @@ export default function TopicDetailedPage({
   const talkingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const animationIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // google drive integration
+  const [files, setFiles] = useState<TextFile[]>([]);
+  const URL_PLACEHOLDER = "https://drive.google.com/file/d/...";
+  // "https://drive.google.com/file/d/1jnvYxbkM9ALR-DZPD_5cvVhJHwqQ1xpu/view?usp=share_link";
+  const [url, setUrl] = useState(URL_PLACEHOLDER);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [fileName, setFileName] = useState("Untitled.txt");
+  // for the aler that pops up upon successful file upload
+  const [successAlert, setSuccessAlert] = useState(false);
 
   // Initialise audio
   useEffect(() => {
@@ -213,6 +228,59 @@ export default function TopicDetailedPage({
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   }, []);
 
+  // add the file
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    // if fileName is empty
+    if (fileName == "") {
+      setError("File name cannot be empty.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/upload-from-drive", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ googleDriveUrl: url }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // console.log(result.file);
+        const file: TextFile = {
+          name: fileName,
+          content: result.fileContent,
+          id: result.fileId,
+        };
+        setFiles([...files, file]);
+        setUrl(URL_PLACEHOLDER);
+        setFileName("Untitled.txt");
+
+        // close the dialog box
+        setDialogOpen(false);
+        setSuccessAlert(true);
+      } else {
+        setError(result.error || "Upload failed");
+      }
+    } catch (err) {
+      setError("Network error occurred");
+      console.error("Upload error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // remove files
+  const removeFile = (file: TextFile) => {
+    setFiles(files.filter((f) => f != file));
+  };
+
   // Show error if browser doesn't support speech recognition
   // if (!browserSupportsSpeechRecognition) {
   //   return (
@@ -228,6 +296,25 @@ export default function TopicDetailedPage({
 
   return (
     <div className="flex space-y-8 items-center flex-col w-full max-w-[1600px]">
+      {successAlert && (
+        <Alert
+          variant="default"
+          className="w-full max-w-md fixed top-5 right-5 z-[100] flex justify-between items-center"
+        >
+          <div className="flex gap-4 items-center text-green-600">
+            <CheckCircle size={20} color="#16a34a" />
+            <AlertTitle>File Uploaded Successfully!</AlertTitle>
+          </div>
+          <Button
+            className="hover:bg-transparent"
+            onClick={() => setSuccessAlert(false)}
+            variant={"ghost"}
+          >
+            <XIcon />
+          </Button>
+        </Alert>
+      )}
+
       <div
         className={`w-70 h-70 rounded-full bg-background border-4 transition-colors duration-200 ${
           recordingState.isTalking
@@ -248,11 +335,9 @@ export default function TopicDetailedPage({
           priority
         />
       </div>
-
       <p className="text-4xl font-bold mb-4">
         {formatTime(recordingState.time)}
       </p>
-
       <Button
         className="bg-[#ffc300] hover:bg-[#e6b800] w-64 h-16 text-lg rounded-2xl !transition-all"
         onClick={recordingState.isRecording ? stopRecording : startRecording}
@@ -264,9 +349,7 @@ export default function TopicDetailedPage({
         )}
         {recordingState.isRecording ? "End session" : "Start a new session"}
       </Button>
-
       <hr className="w-full border-t-[0.5px] border-border my-8" />
-
       <div className="w-full max-w-[1600px]">
         {recordingState.isRecording ? (
           <div className="bg-neutral-900 p-6 rounded-lg min-h-[120px] transition-all transition-discrete">
@@ -292,37 +375,104 @@ export default function TopicDetailedPage({
             <div>
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold mb-4">Files</h2>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button>
-                      <Import className="w-4 h-4 mr-2" />
-                      Import
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>
-                      <FaGoogleDrive className="w-4 h-4 mr-2" />
-                      Google Drive
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <MonitorSmartphone className="w-4 h-4 mr-2" />
-                      My Device
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button>
+                        <Import className="w-4 h-4 mr-2" />
+                        Import
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DialogTrigger asChild>
+                        <DropdownMenuItem
+                          onClick={() => console.log("clicked")}
+                        >
+                          <FaGoogleDrive className="w-4 h-4 mr-2" />
+                          Google Drive
+                        </DropdownMenuItem>
+                      </DialogTrigger>
+
+                      <DropdownMenuItem>
+                        <MonitorSmartphone className="w-4 h-4 mr-2" />
+                        My Device
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <DialogContent className="sm:max-w-[425px] bg-input">
+                    <DialogHeader>
+                      <DialogTitle>Add Google Drive File</DialogTitle>
+                      <DialogDescription>
+                        {`Make sure that your file's view permissions are set to
+                        "anyone with the link". Only .txt files are allowed for
+                        the time being.`}
+                      </DialogDescription>
+                      {error != "" && (
+                        <Alert
+                          variant="destructive"
+                          className="w-full max-w-md"
+                        >
+                          <AlertCircle />
+                          <AlertTitle className="inline">{error}</AlertTitle>
+                        </Alert>
+                      )}
+                    </DialogHeader>
+                    <div className="grid gap-5 mb-3">
+                      <div>
+                        <Label>File Name</Label>
+                        <Input
+                          value={fileName}
+                          onChange={(e) => setFileName(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label>URL</Label>
+                        <Input
+                          value={url}
+                          onChange={(e) => setUrl(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </DialogClose>
+                      {loading ? (
+                        <Button size="sm" disabled>
+                          <Loader2Icon className="animate-spin" />
+                          Adding
+                        </Button>
+                      ) : (
+                        <Button onClick={handleSubmit}>Add</Button>
+                      )}
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
               <div className="mt-2 space-y-3">
-                {files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center"
-                  >
-                    <FileItem fileName={file.name} fileContent={file.content} />
-                    <Button variant="secondary" size="sm">
-                      <Trash2 className="w-4 h-4" color="#FF383C" />
-                    </Button>
-                  </div>
-                ))}
+                {files.length == 0 ? (
+                  <p>No files added yet. Import files to provide context.</p>
+                ) : (
+                  files.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center hover:bg-neutral-800"
+                    >
+                      <FileItem
+                        fileName={file.name}
+                        fileContent={file.content}
+                      />
+                      <Button
+                        variant="ghost"
+                        className=""
+                        onClick={() => removeFile(file)}
+                      >
+                        <Trash2 color="#FF383C" />
+                      </Button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
