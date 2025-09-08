@@ -260,6 +260,7 @@ export default function TopicDetailedPage({
         };
         setFiles([...files, file]);
         setUrl(URL_PLACEHOLDER);
+        setFileName("Untitled.txt");
 
         // close the dialog box
         setDialogOpen(false);
@@ -273,6 +274,11 @@ export default function TopicDetailedPage({
     } finally {
       setLoading(false);
     }
+  };
+
+  // remove files
+  const removeFile = (file: TextFile) => {
+    setFiles(files.filter((f) => f != file));
   };
 
   // Show error if browser doesn't support speech recognition
@@ -407,8 +413,8 @@ export default function TopicDetailedPage({
                           variant="destructive"
                           className="w-full max-w-md"
                         >
-                          <AlertCircle className="shrink-0" />
-                          <AlertTitle className="h-10">{error}</AlertTitle>
+                          <AlertCircle />
+                          <AlertTitle className="inline">{error}</AlertTitle>
                         </Alert>
                       )}
                     </DialogHeader>
@@ -451,14 +457,18 @@ export default function TopicDetailedPage({
                   files.map((file, index) => (
                     <div
                       key={index}
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center hover:bg-neutral-800"
                     >
                       <FileItem
                         fileName={file.name}
                         fileContent={file.content}
                       />
-                      <Button variant="secondary" size="sm">
-                        <Trash2 className="w-4 h-4" color="#FF383C" />
+                      <Button
+                        variant="ghost"
+                        className=""
+                        onClick={() => removeFile(file)}
+                      >
+                        <Trash2 color="#FF383C" />
                       </Button>
                     </div>
                   ))
