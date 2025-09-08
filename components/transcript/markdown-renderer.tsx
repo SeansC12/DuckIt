@@ -127,7 +127,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           color: #4b5563;
         }
         .markdown-content {
-          color: #000;
+          color: #fff;
         }
         .markdown-content code {
           background-color: #f3f4f6;

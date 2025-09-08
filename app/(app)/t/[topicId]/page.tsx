@@ -40,17 +40,12 @@ import {
   XIcon,
 } from "lucide-react";
 import { FaGoogleDrive, FaStop, FaPlay } from "react-icons/fa";
-
-// Speech Recognition
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-
-// Audio
 import { Howl } from "howler";
-
-// Animation
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
+import TranscriptDisplay from "@/components/transcript";
 
 import { TextFile } from "@/lib/TextFile";
 
@@ -205,13 +200,7 @@ export default function TopicDetailedPage({
     console.log("Stopping recording...");
 
     SpeechRecognition.stopListening();
-    setRecordingState((prev) => ({
-      ...prev,
-      isRecording: false,
-      time: 0,
-      isTalking: false,
-      frame: 3,
-    }));
+    setRecordingState((prev) => ({ ...prev, isRecording: false, time: 0, isTalking: false, frame: 3 }));
 
     if (talkingTimeoutRef.current) {
       clearTimeout(talkingTimeoutRef.current);
@@ -352,12 +341,7 @@ export default function TopicDetailedPage({
       <hr className="w-full border-t-[0.5px] border-border my-8" />
       <div className="w-full max-w-[1600px]">
         {recordingState.isRecording ? (
-          <div className="bg-neutral-900 p-6 rounded-lg min-h-[120px] transition-all transition-discrete">
-            <h3 className="font-medium mb-2">Formatted Transcript</h3>
-            <p className="italic">
-              {transcript || "Start speaking to see your transcript here..."}
-            </p>
-          </div>
+          <TranscriptDisplay transcript={transcript} />
         ) : (
           // Default View
           <div className="w-full grid grid-cols-2 gap-12 transition-all transition-discrete">

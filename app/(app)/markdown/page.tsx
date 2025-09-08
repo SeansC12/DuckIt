@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import MarkdownRenderer from "../../../components/MarkdownRenderer";
+import MarkdownRenderer from "../../../components/transcript/markdown-renderer";
 
 const InteractiveMarkdownRenderer = () => {
   const [markdownText, setMarkdownText] =

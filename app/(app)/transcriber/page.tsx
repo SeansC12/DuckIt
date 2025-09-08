@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
+import MarkdownRenderer from "@/components/transcript/markdown-renderer";
 
 interface TranscriptionState {
   currentTranscript: string; // The current full transcript from the API
@@ -12,7 +12,7 @@ interface TranscriptionState {
   lastAiUpdateWordCount: number; // Word count when AI last updated
 }
 
-export default function TranscriptionFixer() {
+export default function TranscriptFixer() {
   const [input, setInput] = useState("");
   const [state, setState] = useState<TranscriptionState>({
     currentTranscript: "",
