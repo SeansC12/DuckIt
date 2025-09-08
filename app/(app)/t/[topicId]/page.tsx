@@ -264,7 +264,6 @@ export default function TopicDetailedPage({
         // close the dialog box
         setDialogOpen(false);
         setSuccessAlert(true);
-        // alert("File uploaded successfully!");
       } else {
         setError(result.error || "Upload failed");
       }
@@ -296,8 +295,8 @@ export default function TopicDetailedPage({
           variant="default"
           className="w-full max-w-md fixed top-5 right-5 z-[100] flex justify-between items-center"
         >
-          <div className="flex gap-4 items-center">
-            <CheckCircle size={20} />
+          <div className="flex gap-4 items-center text-green-600">
+            <CheckCircle size={20} color="#16a34a" />
             <AlertTitle>File Uploaded Successfully!</AlertTitle>
           </div>
           <Button
@@ -408,8 +407,8 @@ export default function TopicDetailedPage({
                           variant="destructive"
                           className="w-full max-w-md"
                         >
-                          <AlertCircle />
-                          <AlertTitle>{error}</AlertTitle>
+                          <AlertCircle className="shrink-0" />
+                          <AlertTitle className="h-10">{error}</AlertTitle>
                         </Alert>
                       )}
                     </DialogHeader>

@@ -51,6 +51,27 @@ export async function fetchGoogleDriveFileContent(fileId: string) {
       );
     }
 
+    // Check if we got HTML instead of plain text
+    if (
+      (contentType && contentType.includes("text/html")) ||
+      text.trim().startsWith("<!DOCTYPE") ||
+      text.trim().startsWith("<html")
+    ) {
+      // Check for specific Google Drive error messages
+      if (
+        text.includes("access denied") ||
+        text.includes("permission denied")
+      ) {
+        throw new Error(
+          'File access denied. Make sure the file is shared with "Anyone with the link"',
+        );
+      }
+
+      if (text.includes("file not found") || text.includes("404")) {
+        throw new Error("File not found. Please check the URL");
+      }
+    }
+
     return text;
   } catch (error) {
     console.log("Error fetching Google Drive file:", error);

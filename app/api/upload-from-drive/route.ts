@@ -42,7 +42,8 @@ export async function POST(request: NextRequest) {
     console.error("Upload from Drive error:", error);
     return NextResponse.json(
       {
-        error: "Failed to fetch file from Google Drive",
+        error:
+          "Failed to fetch file from Google Drive. Ensure that the file is shared with 'Anyone with the link' ",
         details: getErrorMessage(error),
       } as ErrorResponse,
       { status: 500 },
