@@ -26,16 +26,16 @@ export async function POST(
     const supabase = await createClient();
 
     const critique = await generateCritique(data.rawTranscript, data.aiProcessedTranscript);
-    // Convert critique to string for database storage
-    const finalFeedback = JSON.stringify(critique);
 
     // Create the session in the database
     const { data: session, error } = await supabase
       .from("sessions")
       .insert({
         topic_id: data.topicId,
-        transcript: data.aiProcessedTranscript,
-        final_feedback: finalFeedback,
+        raw_transcript: data.rawTranscript,
+        ai_processed_transcript: data.aiProcessedTranscript,
+        annotated_transcript: critique.annotatedTranscript,
+        summary: critique.summary,
       })
       .select()
       .single();

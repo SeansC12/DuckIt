@@ -7,30 +7,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
-import { Session } from "@/lib/Session";
+import Link from "next/link";
+import { Tables } from "@/database.types";
 
 export default function SessionCard({
   session,
-  setIsDetail,
 }: {
-  session: Session;
-  setIsDetail: Dispatch<SetStateAction<boolean>>;
+  session: Tables<"sessions">;
 }) {
   return (
     <Card className="h-full w-full grid grid-rows-[auto_1fr] bg-transparent border-4">
       <CardHeader>
-        <CardTitle>{session.name}</CardTitle>
-        <CardDescription>Date: {session.date.toDateString()}</CardDescription>
+        <CardTitle>{session.annotated_transcript?.slice(0, 25)}</CardTitle>
+        <CardDescription>Date: {session.created_at ? new Date(session.created_at).toLocaleDateString() : 'No date available'}</CardDescription>
       </CardHeader>
-      <CardFooter className="">
-        <Button
-          variant={"secondary"}
+      <CardFooter>
+        <Link
+          href={`/t/${session.topic_id}/sessions/${session.id}`}
           className="underline font-bold text-sm"
-          onClick={() => setIsDetail(true)}
         >
           View Summary
-        </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

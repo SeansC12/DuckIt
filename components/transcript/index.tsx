@@ -5,6 +5,7 @@ import MarkdownRenderer from "@/components/transcript/markdown-renderer";
 
 interface TranscriptProcessorProps {
   transcript: string;
+  setAiProcessedTranscript: (text: string) => void;
   className?: string;
 }
 
@@ -18,7 +19,8 @@ interface ProcessingState {
 
 export default function TranscriptDisplay({ 
   transcript, 
-  className = "" 
+  setAiProcessedTranscript,
+  className = ""
 }: TranscriptProcessorProps) {
   const [state, setState] = useState<ProcessingState>({
     aiGeneratedContent: "",
@@ -69,6 +71,7 @@ export default function TranscriptDisplay({
         lastUpdateTime: Date.now(),
         isProcessing: false,
       }));
+      setAiProcessedTranscript(fixedText);
     } catch (error) {
       console.error("Error updating AI generation:", error);
       setState(prev => ({ ...prev, isProcessing: false }));
