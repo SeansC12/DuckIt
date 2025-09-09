@@ -18,7 +18,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
@@ -58,7 +57,6 @@ import { Howl } from "howler";
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 
 import { TextFile } from "@/lib/TextFile";
-import { FileRejection } from "react-dropzone";
 
 const ANIMATION_SPEED = 100;
 const TALKING_TIMEOUT = 1000;
@@ -304,7 +302,6 @@ export default function TopicDetailedPage({
     setError("");
     const file = acceptedFiles[0];
 
-    console.log("handle drop");
     const text = await file.text();
     const newFile: TextFile = {
       name: file.name,
@@ -331,10 +328,6 @@ export default function TopicDetailedPage({
   //     </div>
   //   );
   // }
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   return (
     <div className="flex space-y-8 items-center flex-col w-full max-w-[1600px]">
