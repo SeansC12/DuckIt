@@ -23,6 +23,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import {
+  Dropzone,
+  DropzoneContent,
+  DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 
 import FileItem from "@/components/file-item";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +58,7 @@ import { Howl } from "howler";
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 
 import { TextFile } from "@/lib/TextFile";
+import { FileRejection } from "react-dropzone";
 
 const ANIMATION_SPEED = 100;
 const TALKING_TIMEOUT = 1000;
@@ -62,6 +68,12 @@ interface RecordingState {
   time: number;
   isTalking: boolean;
   frame: number;
+}
+
+enum ImportOption {
+  Device,
+  GoogleDrive,
+  Closed,
 }
 
 export default function TopicDetailedPage({
@@ -98,10 +110,15 @@ export default function TopicDetailedPage({
   const [url, setUrl] = useState(URL_PLACEHOLDER);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [fileName, setFileName] = useState("Untitled.txt");
   // for the aler that pops up upon successful file upload
   const [successAlert, setSuccessAlert] = useState(false);
+
+  // for the dialog
+  // for which import option dialog is opened when "import" is clicked
+  const [importOption, setImportOption] = useState<ImportOption>(
+    ImportOption.Closed,
+  );
 
   // Initialise audio
   useEffect(() => {
@@ -263,7 +280,7 @@ export default function TopicDetailedPage({
         setFileName("Untitled.txt");
 
         // close the dialog box
-        setDialogOpen(false);
+        setImportOption(ImportOption.Closed);
         setSuccessAlert(true);
       } else {
         setError(result.error || "Upload failed");
@@ -281,6 +298,27 @@ export default function TopicDetailedPage({
     setFiles(files.filter((f) => f != file));
   };
 
+  // handle drop files
+  const handleDrop = async (acceptedFiles: File[]) => {
+    // since only 1 file is allowed
+    setError("");
+    const file = acceptedFiles[0];
+
+    console.log("handle drop");
+    const text = await file.text();
+    const newFile: TextFile = {
+      name: file.name,
+      content: text,
+      id: crypto.randomUUID(),
+    };
+    // Store the processed text files in state
+    setFiles((prev) => [...prev, newFile]);
+    // close the dialog
+    setImportOption(ImportOption.Closed);
+    // show success alert
+    setSuccessAlert(true);
+  };
+
   // Show error if browser doesn't support speech recognition
   // if (!browserSupportsSpeechRecognition) {
   //   return (
@@ -293,6 +331,10 @@ export default function TopicDetailedPage({
   //     </div>
   //   );
   // }
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   return (
     <div className="flex space-y-8 items-center flex-col w-full max-w-[1600px]">
@@ -375,7 +417,15 @@ export default function TopicDetailedPage({
             <div>
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold mb-4">Files</h2>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <Dialog
+                  open={
+                    importOption == ImportOption.GoogleDrive ||
+                    importOption == ImportOption.Device
+                  }
+                  onOpenChange={(isOpen) =>
+                    setImportOption(isOpen ? importOption : ImportOption.Closed)
+                  }
+                >
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button>
@@ -384,70 +434,102 @@ export default function TopicDetailedPage({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DialogTrigger asChild>
-                        <DropdownMenuItem
-                          onClick={() => console.log("clicked")}
-                        >
-                          <FaGoogleDrive className="w-4 h-4 mr-2" />
-                          Google Drive
-                        </DropdownMenuItem>
-                      </DialogTrigger>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setImportOption(ImportOption.GoogleDrive)
+                        }
+                      >
+                        <FaGoogleDrive className="w-4 h-4 mr-2" />
+                        Google Drive
+                      </DropdownMenuItem>
 
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setImportOption(ImportOption.Device)}
+                      >
                         <MonitorSmartphone className="w-4 h-4 mr-2" />
                         My Device
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  <DialogContent className="sm:max-w-[425px] bg-input">
-                    <DialogHeader>
-                      <DialogTitle>Add Google Drive File</DialogTitle>
-                      <DialogDescription>
-                        {`Make sure that your file's view permissions are set to
+                  {importOption == ImportOption.GoogleDrive ? (
+                    <DialogContent className="sm:max-w-[425px] bg-input">
+                      <DialogHeader>
+                        <DialogTitle>Add Google Drive File</DialogTitle>
+                        <DialogDescription>
+                          {`Make sure that your file's view permissions are set to
                         "anyone with the link". Only .txt files are allowed for
                         the time being.`}
-                      </DialogDescription>
-                      {error != "" && (
-                        <Alert
-                          variant="destructive"
-                          className="w-full max-w-md"
+                        </DialogDescription>
+                        {error != "" && (
+                          <Alert
+                            variant="destructive"
+                            className="w-full max-w-md"
+                          >
+                            <AlertCircle />
+                            <AlertTitle className="inline">{error}</AlertTitle>
+                          </Alert>
+                        )}
+                      </DialogHeader>
+                      <div className="grid gap-5 mb-3">
+                        <div>
+                          <Label>File Name</Label>
+                          <Input
+                            value={fileName}
+                            onChange={(e) => setFileName(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label>URL</Label>
+                          <Input
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        {loading ? (
+                          <Button size="sm" disabled>
+                            <Loader2Icon className="animate-spin" />
+                            Adding
+                          </Button>
+                        ) : (
+                          <Button onClick={handleSubmit}>Add</Button>
+                        )}
+                      </DialogFooter>
+                    </DialogContent>
+                  ) : (
+                    <DialogContent className="sm:max-w-[425px] bg-input">
+                      <DialogHeader>
+                        <DialogTitle>Import from device</DialogTitle>
+                      </DialogHeader>
+                      <div>
+                        {error != "" && (
+                          <Alert
+                            variant="destructive"
+                            className="w-full max-w-md"
+                          >
+                            <AlertCircle />
+                            <AlertTitle className="inline">{error}</AlertTitle>
+                          </Alert>
+                        )}
+                        <Dropzone
+                          accept={{ "text/plain": [".txt"] }}
+                          maxFiles={1}
+                          multiple={false}
+                          onDrop={handleDrop}
+                          onError={(error) => setError(error.message)}
                         >
-                          <AlertCircle />
-                          <AlertTitle className="inline">{error}</AlertTitle>
-                        </Alert>
-                      )}
-                    </DialogHeader>
-                    <div className="grid gap-5 mb-3">
-                      <div>
-                        <Label>File Name</Label>
-                        <Input
-                          value={fileName}
-                          onChange={(e) => setFileName(e.target.value)}
-                        />
+                          <DropzoneEmptyState />
+                          <DropzoneContent />
+                        </Dropzone>
                       </div>
-                      <div>
-                        <Label>URL</Label>
-                        <Input
-                          value={url}
-                          onChange={(e) => setUrl(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="outline">Cancel</Button>
-                      </DialogClose>
-                      {loading ? (
-                        <Button size="sm" disabled>
-                          <Loader2Icon className="animate-spin" />
-                          Adding
-                        </Button>
-                      ) : (
-                        <Button onClick={handleSubmit}>Add</Button>
-                      )}
-                    </DialogFooter>
-                  </DialogContent>
+                      <DialogFooter></DialogFooter>
+                    </DialogContent>
+                  )}
                 </Dialog>
               </div>
               <div className="mt-2 space-y-3">
