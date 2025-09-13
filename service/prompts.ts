@@ -27,7 +27,7 @@ You have been given:
 2. The original processed transcript for reference
 
 Your task is to provide comprehensive feedback that includes:
-- For each of the highlighted errors in the annotated transcript, explain why it is incorrect
+- For each of the highlighted errors in the annotated transcript, write out the mistake and explain why it is incorrect
 - Be brief and direct, focusing on explaining really quickly what is incorrect and why
 - Provide the correct answer
 - Order the explanations in the order the errors appear in the transcript. Please number each explanation to match the order of appearance.

@@ -55,7 +55,7 @@ export default async function SessionDetailPage({
 
   return (
     <div className="space-y-8">
-      <h1>DuckIt Score</h1>
+      <h2>DuckIt Score</h2>
       <ScoreDashboard
         donutScore={80}
         accuracyScore={76}

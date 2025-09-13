@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <Sidebar />
           <main className="w-full h-screen p-2">
-            <div className="w-full h-full rounded-xl border bg-[#0a0700]">
+            <div className="w-full h-full rounded-xl border bg-[#0a0700] overflow-y-auto">
               {children}
             </div>
           </main>

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Plus } from "lucide-react";
 
-
 export default function CreateTopicButton() {
   const supabase = createClient();
   const router = useRouter();

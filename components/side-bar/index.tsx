@@ -2,10 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import React from "react";
 import TopicItem from "./topic-item";
 import CreateTopicButton from "./createTopicButton";
-import favicon from "@/public/favicon.png"
+import favicon from "@/public/favicon.png";
 import { Search } from "lucide-react";
 import Image from "next/image";
-
 
 export default async function Sidebar() {
   const supabase = await createClient();

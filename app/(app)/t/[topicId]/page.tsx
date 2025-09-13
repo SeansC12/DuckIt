@@ -257,8 +257,6 @@ export default function TopicDetailedPage({
     } else {
       router.push(`/t/${topicId}/sessions`);
     }
-
-    // router.push(`/t/${topicId}/sessions`);
   }, [router, topicId, transcript, aiProcessedTranscript]);
 
   const formatTime = useCallback((seconds: number) => {
