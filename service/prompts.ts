@@ -1,4 +1,6 @@
-export const ANNOTATION_PROMPT = (aiProcessedTranscript: string) => `You are an expert reviewer analyzing a transcript for factual accuracy and logical consistency.
+export const ANNOTATION_PROMPT = (
+  aiProcessedTranscript: string,
+) => `You are an expert reviewer analyzing a transcript for factual accuracy and logical consistency.
 
 Your task is to create an annotated version of the processed transcript, highlighting any errors, inaccuracies, or problematic statements in red markdown format.
 
@@ -15,7 +17,10 @@ ${aiProcessedTranscript}
 
 Return the annotated transcript with red highlights for incorrect content:`;
 
-export const FEEDBACK_PROMPT = (annotatedTranscript: string, aiProcessedTranscript: string) => `You are an expert educator providing constructive feedback on a transcript.
+export const FEEDBACK_PROMPT = (
+  annotatedTranscript: string,
+  aiProcessedTranscript: string,
+) => `You are an expert educator providing constructive feedback on a transcript.
 
 You have been given:
 1. An annotated transcript with errors highlighted in red

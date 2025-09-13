@@ -51,7 +51,7 @@ export default async function SessionDetailPage({
     const durationMs = end.getTime() - start.getTime();
     const minutes = Math.floor(durationMs / 60000);
     const seconds = Math.floor((durationMs % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -62,9 +62,9 @@ export default async function SessionDetailPage({
         accuracyScore={76}
         familiarityScore={88}
       />
-      <MarkdownRenderer markdownText={session.ai_processed_transcript || ''} />
-      <MarkdownRenderer markdownText={session.annotated_transcript || ''} />
-      <MarkdownRenderer markdownText={session.summary || ''} />
+      <MarkdownRenderer markdownText={session.ai_processed_transcript || ""} />
+      <MarkdownRenderer markdownText={session.annotated_transcript || ""} />
+      <MarkdownRenderer markdownText={session.summary || ""} />
     </div>
   );
 }

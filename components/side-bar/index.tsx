@@ -5,7 +5,10 @@ import CreateTopicButton from "./createTopicButton";
 
 export default async function Sidebar() {
   const supabase = await createClient();
-  const { data: topics, error } = await supabase.from("topics").select().order('created_at', { ascending: false });
+  const { data: topics, error } = await supabase
+    .from("topics")
+    .select()
+    .order("created_at", { ascending: false });
 
   if (error) {
     return <div>Error loading topics</div>;

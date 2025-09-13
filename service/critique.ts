@@ -7,7 +7,10 @@ interface Critique {
   summary: string;
 }
 
-export async function generateCritique(rawTranscript: string, aiProcessedTranscript: string): Promise<Critique> {
+export async function generateCritique(
+  rawTranscript: string,
+  aiProcessedTranscript: string,
+): Promise<Critique> {
   const model = cerebras("llama-3.3-70b");
 
   // First API call: Generate annotated transcript

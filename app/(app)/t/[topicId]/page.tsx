@@ -216,7 +216,13 @@ export default function TopicDetailedPage({
     console.log("Stopping recording...");
 
     SpeechRecognition.stopListening();
-    setRecordingState((prev) => ({ ...prev, isRecording: false, time: 0, isTalking: false, frame: 3 }));
+    setRecordingState((prev) => ({
+      ...prev,
+      isRecording: false,
+      time: 0,
+      isTalking: false,
+      frame: 3,
+    }));
 
     if (talkingTimeoutRef.current) {
       clearTimeout(talkingTimeoutRef.current);
@@ -224,7 +230,7 @@ export default function TopicDetailedPage({
 
     const finalTranscript = AiProcessedTranscript || transcript.trim();
     let sessionId;
-    
+
     if (finalTranscript.length > 0) {
       try {
         const response = await fetch("/api/sessions", {
@@ -405,7 +411,10 @@ export default function TopicDetailedPage({
       <hr className="w-full border-t-[0.5px] border-border my-8" />
       <div className="w-full max-w-[1600px]">
         {recordingState.isRecording ? (
-          <TranscriptDisplay transcript={transcript} setAiProcessedTranscript={setAiProcessedTranscript} />
+          <TranscriptDisplay
+            transcript={transcript}
+            setAiProcessedTranscript={setAiProcessedTranscript}
+          />
         ) : (
           // Default View
           <div className="w-full grid grid-cols-2 gap-12 transition-all transition-discrete">

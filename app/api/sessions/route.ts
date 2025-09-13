@@ -1,31 +1,30 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import { generateCritique } from "@/service/critique"
-
+import { generateCritique } from "@/service/critique";
 
 interface SessionRequestBody {
-  topicId: string,
+  topicId: string;
   rawTranscript: string;
   aiProcessedTranscript: string;
 }
 
-
-export async function POST(
-  request: NextRequest,
-) {
+export async function POST(request: NextRequest) {
   try {
     const data: SessionRequestBody = await request.json();
 
     if (!data.rawTranscript || !data.aiProcessedTranscript) {
       return NextResponse.json(
         { error: "Validation error on request body." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const supabase = await createClient();
 
-    const critique = await generateCritique(data.rawTranscript, data.aiProcessedTranscript);
+    const critique = await generateCritique(
+      data.rawTranscript,
+      data.aiProcessedTranscript,
+    );
 
     // Create the session in the database
     const { data: session, error } = await supabase
@@ -44,7 +43,7 @@ export async function POST(
       console.error("Database error:", error);
       return NextResponse.json(
         { error: "Failed to create session" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -53,7 +52,7 @@ export async function POST(
     console.error("Error creating session:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

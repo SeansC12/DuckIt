@@ -17,10 +17,10 @@ interface ProcessingState {
   lastUpdateTime: number;
 }
 
-export default function TranscriptDisplay({ 
-  transcript, 
+export default function TranscriptDisplay({
+  transcript,
   setAiProcessedTranscript,
-  className = ""
+  className = "",
 }: TranscriptProcessorProps) {
   const [state, setState] = useState<ProcessingState>({
     aiGeneratedContent: "",
@@ -40,7 +40,7 @@ export default function TranscriptDisplay({
     }
 
     isProcessingRef.current = true;
-    setState(prev => ({ ...prev, isProcessing: true }));
+    setState((prev) => ({ ...prev, isProcessing: true }));
 
     try {
       const response = await fetch("/api/fix-transcription", {
@@ -63,7 +63,7 @@ export default function TranscriptDisplay({
 
       lastGenerationRef.current = fixedText;
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         aiGeneratedContent: fixedText,
         unprocessed: "",
@@ -74,7 +74,7 @@ export default function TranscriptDisplay({
       setAiProcessedTranscript(fixedText);
     } catch (error) {
       console.error("Error updating AI generation:", error);
-      setState(prev => ({ ...prev, isProcessing: false }));
+      setState((prev) => ({ ...prev, isProcessing: false }));
     } finally {
       isProcessingRef.current = false;
     }
@@ -85,19 +85,25 @@ export default function TranscriptDisplay({
       clearTimeout(timeoutRef.current);
     }
 
-    if (isProcessingRef.current || transcript.length <= state.lastProcessedLength) {
+    if (
+      isProcessingRef.current ||
+      transcript.length <= state.lastProcessedLength
+    ) {
       return;
     }
 
     const newContentLength = transcript.length - state.lastProcessedLength;
     const baseDelay = 1000;
     const maxDelay = 3000;
-    
+
     const delay = Math.min(maxDelay, baseDelay + (50 - newContentLength) * 20);
-    
-    timeoutRef.current = setTimeout(() => {
-      updateAiGeneration(transcript);
-    }, Math.max(500, delay));
+
+    timeoutRef.current = setTimeout(
+      () => {
+        updateAiGeneration(transcript);
+      },
+      Math.max(500, delay),
+    );
   };
 
   useEffect(() => {
@@ -116,7 +122,7 @@ export default function TranscriptDisplay({
     // Update unprocessed text immediately for responsive UI
     const newContent = transcript.slice(state.lastProcessedLength);
     if (newContent) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         unprocessed: newContent,
       }));
@@ -156,7 +162,7 @@ export default function TranscriptDisplay({
           )}
         </div>
       </div>
-      
+
       <div className="p-6">
         {hasContent ? (
           <div className="prose prose-lg max-w-none">
@@ -179,7 +185,8 @@ export default function TranscriptDisplay({
             <div>Is processing: {state.isProcessing.toString()}</div>
             {state.lastUpdateTime > 0 && (
               <div>
-                Last update: {new Date(state.lastUpdateTime).toLocaleTimeString()}
+                Last update:{" "}
+                {new Date(state.lastUpdateTime).toLocaleTimeString()}
               </div>
             )}
           </div>
