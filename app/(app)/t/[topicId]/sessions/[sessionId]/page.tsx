@@ -57,7 +57,7 @@ export default async function SessionDetailPage({
     <div className="max-w-4xl mx-auto space-y-8">
       <MarkdownRenderer markdownText={session.ai_processed_transcript || ''} />
       <MarkdownRenderer markdownText={session.annotated_transcript || ''} />
-      <MarkdownRenderer markdownText={session.raw_transcript || ''} />
+      <MarkdownRenderer markdownText={session.summary || ''} />
     </div>
   );
 }

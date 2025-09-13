@@ -20,9 +20,9 @@ export default async function SessionsPage({
     .order("created_at", { ascending: false });
 
   return (
-    <div className="space-y-10">
+    <div className="w-full">
       {sessions && sessions.length > 0 ? (
-        <div className="space-y-4">
+        <div className="w-full flex gap-6 justify-start">
           {sessions.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}

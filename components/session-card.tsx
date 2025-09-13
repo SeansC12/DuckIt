@@ -16,19 +16,16 @@ export default function SessionCard({
   session: Tables<"sessions">;
 }) {
   return (
-    <Card className="h-full w-full grid grid-rows-[auto_1fr] bg-transparent border-4">
-      <CardHeader>
-        <CardTitle>{session.annotated_transcript?.slice(0, 25)}</CardTitle>
-        <CardDescription>Date: {session.created_at ? new Date(session.created_at).toLocaleDateString() : 'No date available'}</CardDescription>
-      </CardHeader>
-      <CardFooter>
-        <Link
-          href={`/t/${session.topic_id}/sessions/${session.id}`}
-          className="underline font-bold text-sm"
-        >
-          View Summary
-        </Link>
-      </CardFooter>
-    </Card>
+    <Link className="group" href={`/t/${session.topic_id}/sessions/${session.id}`}>
+      <Card className="w-full min-w-96 max-w-lg">
+        <CardHeader>
+          <CardTitle className="group-hover:underline">{session.annotated_transcript?.slice(0, 5)}</CardTitle>
+          <CardDescription>{session.annotated_transcript?.slice(0, 200)}</CardDescription>
+        </CardHeader>
+        <CardFooter>
+          Created at {session.created_at ? new Date(session.created_at).toLocaleDateString() : 'No date available'}
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
