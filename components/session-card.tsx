@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 import {
   Card,
   CardDescription,
@@ -7,31 +5,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
-import { Session } from "@/lib/Session";
+import Link from "next/link";
+import { Tables } from "@/database.types";
 
 export default function SessionCard({
   session,
-  setIsDetail,
 }: {
-  session: Session;
-  setIsDetail: Dispatch<SetStateAction<boolean>>;
+  session: Tables<"sessions">;
 }) {
   return (
-    <Card className="h-full w-full grid grid-rows-[auto_1fr] bg-transparent border-4">
-      <CardHeader>
-        <CardTitle>{session.name}</CardTitle>
-        <CardDescription>Date: {session.date.toDateString()}</CardDescription>
-      </CardHeader>
-      <CardFooter className="">
-        <Button
-          variant={"secondary"}
-          className="underline font-bold text-sm"
-          onClick={() => setIsDetail(true)}
-        >
-          View Summary
-        </Button>
-      </CardFooter>
-    </Card>
+    <Link
+      className="group"
+      href={`/t/${session.topic_id}/sessions/${session.id}`}
+    >
+      <Card className="w-full min-w-96 max-w-lg">
+        <CardHeader>
+          <CardTitle className="group-hover:underline">
+            {session.annotated_transcript?.slice(0, 5)}
+          </CardTitle>
+          <CardDescription>
+            {session.annotated_transcript?.slice(0, 200)}
+          </CardDescription>
+        </CardHeader>
+        <CardFooter>
+          Created at{" "}
+          {session.created_at
+            ? new Date(session.created_at).toLocaleDateString()
+            : "No date available"}
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }

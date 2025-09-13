@@ -26,14 +26,17 @@ IMPORTANT INSTRUCTIONS:
 layer of lists is supported, so ensure lists only contain related information.
 - If you see obvious mistakes in your previous generation (provided below), fix them
 - Make the text flow naturally and coherently, for example by removing filler words ("umm"), transitions \
-that are made redundant by list formatting ("firstly", or "and"/"or" before the last element)
-- Remove user mistakes, for example "wait no I meant"
+that are made redundant by list formatting ("firstly", "and"/"or" before the last element, or "etc")
+- Remove user mistakes, for example "wait no I meant". If a user starts to say something and then corrects themselves, \
+only include the corrected version.
+- PRESERVE THE ORIGINAL TRANSCRIPT'S MEANING - this is VERY IMPORTANT.
+- If there are factual mistakes in the transcript, DO NOT CORRECT THEM. Your job is to fix the transcription, not the facts.
 - Do NOT add content that wasn't in the original transcription. This is VERY IMPORTANT - do NOT ADD CONTENT. \
 Do NOT add headers.
-- Highlight incorrect information within the transcript as \`==red==[incorrect content here]==/red==\`. \
-You may highlight a word, a phrase, or a sentence, but not more than one sentence as a single highlight. \
-Do NOT correct the original transcription. Do NOT comment or write notes on what was incorrect, simply point it out.
-- Return ONLY the fixed markdown - NO explanations, meta-commentary.
+Do NOT correct the original transcription. Do NOT comment or write notes on what was incorrect.
+- Return ONLY the fixed markdown - NO explanations or meta-commentary.
+
+YOUR JOB IS TO ONLY TRANSCRIBE, DO NOT CHANGE THE CONTENT, like MOVING, REMOVING, OR FIXING WORDS. DO NOT ADD IN ANY EXPLANATIONS OR NOTES.
 
 If you do not have enough context to determine if a word should be removed, moved, or fixed (eg. incomplete sentence), please leave it as-is.
 `;

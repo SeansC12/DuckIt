@@ -57,7 +57,7 @@ export default function TopicLayout({
           </Link>
         </TabsList>
         <TabsContent
-          className="flex justify-center items-center"
+          className="flex justify-center items-center mt-5"
           value={defaultTab}
         >
           {children}

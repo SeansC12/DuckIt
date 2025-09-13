@@ -104,6 +104,7 @@ export default function TopicDetailedPage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [fileName, setFileName] = useState("Untitled.txt");
+  const [aiProcessedTranscript, setAiProcessedTranscript] = useState("");
   // for the aler that pops up upon successful file upload
   const [successAlert, setSuccessAlert] = useState(false);
 
@@ -211,20 +212,54 @@ export default function TopicDetailedPage({
     console.log("Speech recognition started");
   }, [browserSupportsSpeechRecognition, resetTranscript]);
 
-  const stopRecording = useCallback(() => {
+  const stopRecording = useCallback(async () => {
     console.log("Stopping recording...");
 
     SpeechRecognition.stopListening();
-    setRecordingState((prev) => ({ ...prev, isRecording: false, time: 0, isTalking: false, frame: 3 }));
+    setRecordingState((prev) => ({
+      ...prev,
+      isRecording: false,
+      time: 0,
+      isTalking: false,
+      frame: 3,
+    }));
 
     if (talkingTimeoutRef.current) {
       clearTimeout(talkingTimeoutRef.current);
     }
 
-    console.log("Final transcript:", transcript);
+    const finalTranscript = aiProcessedTranscript || transcript.trim();
+    let sessionId;
+
+    if (finalTranscript.length > 0) {
+      try {
+        const response = await fetch("/api/sessions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            topicId: topicId,
+            rawTranscript: transcript,
+            aiProcessedTranscript: aiProcessedTranscript,
+          }),
+        });
+
+        const data = await response.json();
+        sessionId = data.sessionId;
+      } catch (error) {
+        console.error("Error creating session:", error);
+      }
+    }
+
+    if (sessionId) {
+      router.push(`/t/${topicId}/sessions/${sessionId}`);
+    } else {
+      router.push(`/t/${topicId}/sessions`);
+    }
 
     // router.push(`/t/${topicId}/sessions`);
-  }, [router, topicId, transcript]);
+  }, [router, topicId, transcript, aiProcessedTranscript]);
 
   const formatTime = useCallback((seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -376,7 +411,10 @@ export default function TopicDetailedPage({
       <hr className="w-full border-t-[0.5px] border-border my-8" />
       <div className="w-full max-w-[1600px]">
         {recordingState.isRecording ? (
-          <TranscriptDisplay transcript={transcript} />
+          <TranscriptDisplay
+            transcript={transcript}
+            setAiProcessedTranscript={setAiProcessedTranscript}
+          />
         ) : (
           // Default View
           <div className="w-full grid grid-cols-2 gap-12 transition-all transition-discrete">

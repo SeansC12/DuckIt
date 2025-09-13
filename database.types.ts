@@ -16,25 +16,31 @@ export type Database = {
     Tables: {
       sessions: {
         Row: {
+          ai_processed_transcript: string | null;
+          annotated_transcript: string | null;
           created_at: string | null;
-          final_feedback: string | null;
           id: string;
+          raw_transcript: string | null;
+          summary: string | null;
           topic_id: string;
-          transcript: string | null;
         };
         Insert: {
+          ai_processed_transcript?: string | null;
+          annotated_transcript?: string | null;
           created_at?: string | null;
-          final_feedback?: string | null;
           id?: string;
+          raw_transcript?: string | null;
+          summary?: string | null;
           topic_id: string;
-          transcript?: string | null;
         };
         Update: {
+          ai_processed_transcript?: string | null;
+          annotated_transcript?: string | null;
           created_at?: string | null;
-          final_feedback?: string | null;
           id?: string;
+          raw_transcript?: string | null;
+          summary?: string | null;
           topic_id?: string;
-          transcript?: string | null;
         };
         Relationships: [
           {

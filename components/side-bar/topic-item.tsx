@@ -20,22 +20,26 @@ export default function TopicItem({ topic }: { topic: Tables<"topics"> }) {
   const handleDeleteTopic = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (urlTopicId === topic.id) {
-      router.push('/');
+      router.push("/");
     }
-    await supabase.from("topics").delete().eq('id', topic.id);
+    await supabase.from("topics").delete().eq("id", topic.id);
     router.refresh();
     console.log(`${topic.topic_title} deleted`);
-  }
+  };
 
   const saveTopicTitle = async () => {
-    const { error } = await supabase.from("topics").update({ topic_title: changedTopicTitle }).eq('id', topic.id);
+    const { error } = await supabase
+      .from("topics")
+      .update({ topic_title: changedTopicTitle })
+      .eq("id", topic.id);
     if (error) {
       console.log("Error changing topic title to", changedTopicTitle);
     }
-  }
+  };
 
   return (
-    <div className={`w-full flex justify-between items-center text-left py-2 px-3 rounded-lg ${urlTopicId === topic.id ? "bg-neutral-700" : ""} hover:bg-neutral-700 transition-colors truncate`}
+    <div
+      className={`w-full flex justify-between items-center text-left py-2 px-3 rounded-lg ${urlTopicId === topic.id ? "bg-neutral-700" : ""} hover:bg-neutral-700 transition-colors truncate`}
       role="button"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -51,14 +55,13 @@ export default function TopicItem({ topic }: { topic: Tables<"topics"> }) {
             setIsEditing(false);
             saveTopicTitle();
           }}
-        >
-        </input>
+        ></input>
       ) : (
         changedTopicTitle
-      )
-      }
+      )}
       {isHovering && (
-        <button className="aspect-square h-full rounded-lg hover:outline hover:outline-2 hover:outline-yellow-600"
+        <button
+          className="aspect-square h-full rounded-lg hover:outline hover:outline-2 hover:outline-yellow-600"
           onClick={handleDeleteTopic}
         >
           <X />
