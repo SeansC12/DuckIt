@@ -15,7 +15,7 @@ export default async function Sidebar() {
   }
 
   return (
-    <nav className="hidden md:flex md:flex-col w-80 bg-neutral-900 text-white h-screen p-4 border-r-2 border-r-secondary">
+    <nav className="hidden md:flex md:flex-col w-80 text-white h-screen p-4">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-center">DuckIt</h1>
       </div>

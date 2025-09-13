@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased flex`}>
+      <body className={`${geistSans.className} antialiased flex bg-background`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -33,7 +33,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Sidebar />
-          <main className="w-full h-screen">{children}</main>
+          <main className="w-full h-screen p-2">
+            <div className="w-full h-full rounded-xl border bg-[#0a0700]">
+              {children}
+            </div>
+          </main>
         </ThemeProvider>
       </body>
     </html>
