@@ -62,9 +62,16 @@ export default async function SessionDetailPage({
         accuracyScore={76}
         familiarityScore={88}
       />
-      <MarkdownRenderer markdownText={session.ai_processed_transcript || ""} />
-      <MarkdownRenderer markdownText={session.annotated_transcript || ""} />
-      <MarkdownRenderer markdownText={session.summary || ""} />
+      <div className="grid grid-cols-[60%_40%] gap-2">
+        <div className="w-full rounded-lg border p-6 space-y-4">
+          <h1>Annotated Transcript</h1>
+          <MarkdownRenderer markdownText={session.annotated_transcript || ""} />
+        </div>
+        <div className="w-full rounded-lg border p-6 space-y-4">
+          <h1>Summary</h1>
+          <MarkdownRenderer markdownText={session.summary || ""} />
+        </div>
+      </div>
     </div>
   );
 }
