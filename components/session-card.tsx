@@ -18,7 +18,7 @@ export default function SessionCard({
       className="group"
       href={`/t/${session.topic_id}/sessions/${session.id}`}
     >
-      <Card className="w-full min-w-96 max-w-lg">
+      <Card className="w-full bg-background min-w-96 max-w-lg min-h-[200px]">
         <CardHeader>
           <CardTitle className="group-hover:underline">
             {session.annotated_transcript?.slice(0, 5)}

@@ -22,7 +22,7 @@ export default async function SessionsPage({
   return (
     <div className="w-full">
       {sessions && sessions.length > 0 ? (
-        <div className="w-full flex gap-6 justify-start">
+        <div className="w-full flex gap-6 justify-start flex-wrap">
           {sessions.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}

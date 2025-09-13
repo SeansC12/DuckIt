@@ -39,7 +39,9 @@ export default function TopicItem({ topic }: { topic: Tables<"topics"> }) {
 
   return (
     <div
-      className={`w-full flex justify-between items-center text-left py-2 px-3 rounded-lg ${urlTopicId === topic.id ? "bg-neutral-700" : ""} hover:bg-neutral-700 transition-colors truncate`}
+      className={`w-full flex justify-between items-center text-left py-2 px-3 rounded-lg
+        ${urlTopicId === topic.id ? "bg-[#0f0b00] text-yellow-600 font-semibold hover:bg-[#261C01]" : ""} hover:bg-neutral-900 transition-colors truncate
+      `}
       role="button"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -61,10 +63,10 @@ export default function TopicItem({ topic }: { topic: Tables<"topics"> }) {
       )}
       {isHovering && (
         <button
-          className="aspect-square h-full rounded-lg hover:outline hover:outline-2 hover:outline-yellow-600"
+          className="aspect-square h-full rounded-lg"
           onClick={handleDeleteTopic}
         >
-          <X />
+          <X className="hover:stroke-red-800" />
         </button>
       )}
     </div>
