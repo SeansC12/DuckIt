@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, FileText, MessageSquare } from "lucide-react";
 import MarkdownRenderer from "@/components/transcript/markdown-renderer";
+import { ScoreDashboard } from "@/components/sessions/score-dashboard";
 
 export default async function SessionDetailPage({
   params,
@@ -54,7 +55,13 @@ export default async function SessionDetailPage({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="space-y-8">
+      <h1>DuckIt Score</h1>
+      <ScoreDashboard
+        donutScore={80}
+        accuracyScore={76}
+        familiarityScore={88}
+      />
       <MarkdownRenderer markdownText={session.ai_processed_transcript || ''} />
       <MarkdownRenderer markdownText={session.annotated_transcript || ''} />
       <MarkdownRenderer markdownText={session.summary || ''} />

@@ -30,8 +30,6 @@ that are made redundant by list formatting ("firstly", or "and"/"or" before the 
 - Remove user mistakes, for example "wait no I meant"
 - Do NOT add content that wasn't in the original transcription. This is VERY IMPORTANT - do NOT ADD CONTENT. \
 Do NOT add headers.
-- Highlight incorrect information within the transcript as \`==red==[incorrect content here]==/red==\`. \
-You may highlight a word, a phrase, or a sentence, but not more than one sentence as a single highlight. \
 Do NOT correct the original transcription. Do NOT comment or write notes on what was incorrect, simply point it out.
 - Return ONLY the fixed markdown - NO explanations, meta-commentary.
 
