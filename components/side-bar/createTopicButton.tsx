@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Plus } from "lucide-react";
+
 
 export default function CreateTopicButton() {
   const supabase = createClient();
@@ -30,9 +32,10 @@ export default function CreateTopicButton() {
 
   return (
     <button
-      className="w-full py-2 px-3 hover:bg-neutral-900 border-[1px] border-yellow-600 rounded-lg transition-colors text-left"
+      className="w-full py-2 px-3 hover:bg-neutral-900 rounded-lg transition-colors text-left"
       onClick={createNewTopic}
     >
+      <Plus className="w-4 h-4 mr-2 inline" />
       New Topic
     </button>
   );
