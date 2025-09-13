@@ -51,6 +51,8 @@ import { Howl } from "howler";
 import { AnimationTypes, ANIMATION_FRAMES } from "@/lib/Animation";
 import TranscriptDisplay from "@/components/transcript";
 
+import { SessionGenerationLoadingDialog } from "@/components/session-generation-dialog";
+
 import { TextFile } from "@/lib/TextFile";
 
 const ANIMATION_SPEED = 100;
@@ -107,6 +109,9 @@ export default function TopicDetailedPage({
   const [aiProcessedTranscript, setAiProcessedTranscript] = useState("");
   // for the aler that pops up upon successful file upload
   const [successAlert, setSuccessAlert] = useState(false);
+
+  const [sessionGenerationDialogOpen, setSessionGenerationDialogOpen] =
+    useState(false);
 
   // for the dialog
   // for which import option dialog is opened when "import" is clicked
@@ -232,6 +237,7 @@ export default function TopicDetailedPage({
     let sessionId;
 
     if (finalTranscript.length > 0) {
+      setSessionGenerationDialogOpen(true);
       try {
         const response = await fetch("/api/sessions", {
           method: "POST",
@@ -573,6 +579,7 @@ export default function TopicDetailedPage({
           </div>
         )}
       </div>
+      <SessionGenerationLoadingDialog open={sessionGenerationDialogOpen} />
     </div>
   );
 }
