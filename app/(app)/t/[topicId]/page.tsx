@@ -104,7 +104,7 @@ export default function TopicDetailedPage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [fileName, setFileName] = useState("Untitled.txt");
-  const [AiProcessedTranscript, setAiProcessedTranscript] = useState("");
+  const [aiProcessedTranscript, setAiProcessedTranscript] = useState("");
   // for the aler that pops up upon successful file upload
   const [successAlert, setSuccessAlert] = useState(false);
 
@@ -228,7 +228,7 @@ export default function TopicDetailedPage({
       clearTimeout(talkingTimeoutRef.current);
     }
 
-    const finalTranscript = AiProcessedTranscript || transcript.trim();
+    const finalTranscript = aiProcessedTranscript || transcript.trim();
     let sessionId;
 
     if (finalTranscript.length > 0) {
@@ -241,7 +241,7 @@ export default function TopicDetailedPage({
           body: JSON.stringify({
             topicId: topicId,
             rawTranscript: transcript,
-            aiProcessedTranscript: AiProcessedTranscript,
+            aiProcessedTranscript: aiProcessedTranscript,
           }),
         });
 
@@ -259,7 +259,7 @@ export default function TopicDetailedPage({
     }
 
     // router.push(`/t/${topicId}/sessions`);
-  }, [router, topicId, transcript]);
+  }, [router, topicId, transcript, aiProcessedTranscript]);
 
   const formatTime = useCallback((seconds: number) => {
     const minutes = Math.floor(seconds / 60);

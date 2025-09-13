@@ -1,8 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, FileText, MessageSquare } from "lucide-react";
 import MarkdownRenderer from "@/components/transcript/markdown-renderer";
 import { ScoreDashboard } from "@/components/sessions/score-dashboard";
 
@@ -27,13 +24,14 @@ export default async function SessionDetailPage({
     notFound();
   }
 
-  // Fetch the topic data for context
+  // eslint-disable-next-line
   const { data: topic } = await supabase
     .from("topics")
     .select("topic_title")
     .eq("id", topicId)
     .single();
 
+  // eslint-disable-next-line
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       weekday: "long",
@@ -45,6 +43,7 @@ export default async function SessionDetailPage({
     });
   };
 
+  // eslint-disable-next-line
   const formatDuration = (createdAt: string, updatedAt: string) => {
     const start = new Date(createdAt);
     const end = new Date(updatedAt);

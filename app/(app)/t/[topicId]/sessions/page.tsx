@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Clock } from "lucide-react";
+import { Plus } from "lucide-react";
 import SessionCard from "@/components/session-card";
 
 export default async function SessionsPage({
