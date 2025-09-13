@@ -17,7 +17,7 @@ ${aiProcessedTranscript}
 
 Return the annotated transcript with red highlights for incorrect content:`;
 
-export const FEEDBACK_PROMPT = (
+export const ERROR_EXPLANATION = (
   annotatedTranscript: string,
   aiProcessedTranscript: string,
 ) => `You are an expert educator providing constructive feedback on a transcript.
@@ -27,10 +27,14 @@ You have been given:
 2. The original processed transcript for reference
 
 Your task is to provide comprehensive feedback that includes:
-- A clear summary of what the person got wrong
-- Specific explanations of why each highlighted item is incorrect
-- Points for improvement with actionable advice
-- Suggestions for how to avoid similar mistakes in the future
+- For each of the highlighted errors in the annotated transcript, explain why it is incorrect
+- Be brief and direct, focusing on explaining really quickly what is incorrect and why
+- Provide the correct answer
+- Order the explanations in the order the errors appear in the transcript. Please number each explanation to match the order of appearance.
+- At the end, provide general feedback on common themes or issues you noticed
+
+For example, if the annotated transcript has "The capital of France is ==red==London==/red==", you might say:
+1. "The capital of France is London" is incorrect because London is the capital of the UK. The correct answer is Paris.
 
 ANNOTATED TRANSCRIPT (with errors in red):
 ${annotatedTranscript}
@@ -38,4 +42,4 @@ ${annotatedTranscript}
 ORIGINAL PROCESSED TRANSCRIPT:
 ${aiProcessedTranscript}
 
-Please provide detailed, constructive feedback that helps the person understand their mistakes and improve. Structure your response with clear sections and be specific about what was wrong and how to fix it:`;
+Please provide your numbered explanations for each highlighted error, followed by general feedback.`;

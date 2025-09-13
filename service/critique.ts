@@ -1,6 +1,6 @@
 import { cerebras } from "@ai-sdk/cerebras";
 import { generateText } from "ai";
-import { ANNOTATION_PROMPT, FEEDBACK_PROMPT } from "./prompts";
+import { ANNOTATION_PROMPT, ERROR_EXPLANATION } from "./prompts";
 
 interface Critique {
   annotatedTranscript: string;
@@ -23,7 +23,7 @@ export async function generateCritique(
   // Second API call: Generate comprehensive feedback
   const feedbackResult = await generateText({
     model,
-    prompt: FEEDBACK_PROMPT(annotationResult.text, aiProcessedTranscript),
+    prompt: ERROR_EXPLANATION(annotationResult.text, aiProcessedTranscript),
     temperature: 0.3,
   });
 

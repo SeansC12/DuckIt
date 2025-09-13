@@ -71,7 +71,7 @@ export function ScoreDashboard({
   familiarityScore,
 }: ScoreDashboardProps) {
   return (
-    <div className="flex flex-col lg:flex-row gap-12">
+    <div className="flex flex-col lg:flex-row gap-8">
       {/* First column - Donut Score (smaller width) */}
       <div className="flex flex-col items-center justify-center min-w-80 p-6 rounded-lg border gap-5">
         <h2>Overall Score</h2>
