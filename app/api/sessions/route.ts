@@ -35,6 +35,10 @@ export async function POST(request: NextRequest) {
         ai_processed_transcript: data.aiProcessedTranscript,
         annotated_transcript: critique.annotatedTranscript,
         summary: critique.summary,
+        accuracy_score: critique.score.accuracy,
+        familiarity_score: critique.score.familiarity,
+        clarity_score: critique.score.clarity,
+        overall_score: critique.score.overall,
       })
       .select()
       .single();

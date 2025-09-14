@@ -43,3 +43,35 @@ ORIGINAL PROCESSED TRANSCRIPT:
 ${aiProcessedTranscript}
 
 Please provide your numbered explanations for each highlighted error, followed by general feedback.`;
+
+
+export const SCORE_PROMPT = (
+  annotatedTranscript: string, summary: string
+) => `You are an expert evaluator assessing the quality of a user's transcript. Your main goal would be to judge how well the student recited their material.
+
+You have been given:
+1. An annotated transcript with errors highlighted in red
+2. A summary of the transcript
+
+Your task is to provide a quality score for the user's transcript based on each of following criteria:
+- Accuracy: How factually correct and precise was the student's explanation based on the original material? (0-100 points)
+- Familiarity: Does the student show confidence and fluency, or do they hesitate and struggle to recall information? (0-100 points)
+- Clarity: How clearly and logically did the student explain their ideas? Was the explanation easy to follow? (0-100 points)
+
+After you have generated each of the scores for each criteria, generate a final overall score out of 100 points, it may not be an average of the three scores, but should reflect your overall impression of the quality of the transcript.
+
+Finally, STRICTLY return your scores in the following CSV format, with no additional commentary or explanation:
+accuracy_score,familiarity_score,clarity_score,overall_score
+
+For example:
+85,90,80,88
+
+There should be no additional text, just the four scores in CSV format. No decimals, no percentage signs, no commentary.
+
+ANNOTATED TRANSCRIPT (with errors in red):
+${annotatedTranscript}
+
+SUMMARY OF THE TRANSCRIPT:
+${summary}
+
+Please provide your scores now:`;

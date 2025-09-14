@@ -63,12 +63,14 @@ interface ScoreDashboardProps {
   donutScore: number;
   accuracyScore: number;
   familiarityScore: number;
+  clarityScore: number;
 }
 
 export function ScoreDashboard({
   donutScore,
   accuracyScore,
   familiarityScore,
+  clarityScore,
 }: ScoreDashboardProps) {
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -106,15 +108,15 @@ export function ScoreDashboard({
         </div>
 
         <div className="flex-1 space-y-4">
-          <h3 className="text-lg font-semibold text-foreground">Familiarity</h3>
+          <h3 className="text-lg font-semibold text-foreground">Clarity</h3>
           <div className="space-y-2">
-            <Progress value={familiarityScore} className="h-2" />
+            <Progress value={clarityScore} className="h-2" />
             <div className="text-sm text-muted-foreground text-right">
               {familiarityScore}%
             </div>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Description for familiarity score
+            Description for clariy score
           </p>
         </div>
       </div>

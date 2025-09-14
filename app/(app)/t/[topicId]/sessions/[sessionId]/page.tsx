@@ -57,9 +57,10 @@ export default async function SessionDetailPage({
     <div className="space-y-8">
       <h2>DuckIt Score</h2>
       <ScoreDashboard
-        donutScore={80}
-        accuracyScore={76}
-        familiarityScore={88}
+        donutScore={session.overall_score || 82}
+        accuracyScore={session.accuracy_score || 75}
+        familiarityScore={session.familiarity_score || 80}
+        clarityScore={session.clarity_score || 87}
       />
       <div className="grid grid-cols-[60%_40%] gap-2">
         <div className="w-full rounded-lg border p-6 space-y-4">
