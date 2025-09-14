@@ -89,8 +89,8 @@ export function ScoreDashboard({
               {accuracyScore}%
             </div>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Description for accuracy score
+          <p className="text-base text-muted-foreground leading-relaxed">
+            This measures whether the facts, details, and reasoning in your explanation are correct. High accuracy means you got the details right and didn't include major mistakes.
           </p>
         </div>
 
@@ -102,8 +102,8 @@ export function ScoreDashboard({
               {familiarityScore}%
             </div>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Description for familiarity score
+          <p className="text-base text-muted-foreground leading-relaxed">
+            This looks at whether you explain smoothly without too many pauses, hesitations, or guesses. High familiarity means you really know the material and can recall it easily.
           </p>
         </div>
 
@@ -112,11 +112,11 @@ export function ScoreDashboard({
           <div className="space-y-2">
             <Progress value={clarityScore} className="h-2" />
             <div className="text-sm text-muted-foreground text-right">
-              {familiarityScore}%
+              {clarityScore}%
             </div>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Description for clariy score
+          <p className="text-base text-muted-foreground leading-relaxed">
+            This checks if your explanation is organised, logical, and clear. High clarity means someone else could easily follow what you said without confusion.
           </p>
         </div>
       </div>
