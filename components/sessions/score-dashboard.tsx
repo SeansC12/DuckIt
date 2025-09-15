@@ -90,7 +90,9 @@ export function ScoreDashboard({
             </div>
           </div>
           <p className="text-base text-muted-foreground leading-relaxed">
-            This measures whether the facts, details, and reasoning in your explanation are correct. High accuracy means you got the details right and didn't include major mistakes.
+            This measures whether the facts, details, and reasoning in your
+            explanation are correct. High accuracy means you got the details
+            right and didn&apos;t include major mistakes.
           </p>
         </div>
 
@@ -103,7 +105,9 @@ export function ScoreDashboard({
             </div>
           </div>
           <p className="text-base text-muted-foreground leading-relaxed">
-            This looks at whether you explain smoothly without too many pauses, hesitations, or guesses. High familiarity means you really know the material and can recall it easily.
+            This looks at whether you explain smoothly without too many pauses,
+            hesitations, or guesses. High familiarity means you really know the
+            material and can recall it easily.
           </p>
         </div>
 
@@ -116,7 +120,9 @@ export function ScoreDashboard({
             </div>
           </div>
           <p className="text-base text-muted-foreground leading-relaxed">
-            This checks if your explanation is organised, logical, and clear. High clarity means someone else could easily follow what you said without confusion.
+            This checks if your explanation is organised, logical, and clear.
+            High clarity means someone else could easily follow what you said
+            without confusion.
           </p>
         </div>
       </div>

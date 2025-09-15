@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
     const { data: session, error } = await supabase
       .from("sessions")
       .insert({
+        session_title: critique.session_title,
         topic_id: data.topicId,
         raw_transcript: data.rawTranscript,
         ai_processed_transcript: data.aiProcessedTranscript,

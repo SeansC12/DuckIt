@@ -1,6 +1,11 @@
 import { cerebras } from "@ai-sdk/cerebras";
 import { generateText } from "ai";
-import { ANNOTATION_PROMPT, ERROR_EXPLANATION, SCORE_PROMPT } from "./prompts";
+import {
+  ANNOTATION_PROMPT,
+  ERROR_EXPLANATION,
+  SCORE_PROMPT,
+  TITLE_PROMPT,
+} from "./prompts";
 
 interface Critique {
   annotatedTranscript: string;
@@ -10,7 +15,8 @@ interface Critique {
     familiarity: number;
     clarity: number;
     overall: number;
-  }
+  };
+  session_title: string;
 }
 
 export async function generateCritique(
@@ -40,6 +46,12 @@ export async function generateCritique(
     temperature: 0.4,
   });
 
+  const titleResult = await generateText({
+    model,
+    prompt: TITLE_PROMPT(aiProcessedTranscript),
+    temperature: 0.3,
+  });
+
   return {
     annotatedTranscript: annotationResult.text.trim(),
     summary: feedbackResult.text.trim(),
@@ -50,5 +62,6 @@ export async function generateCritique(
         .map((s) => parseInt(s, 10));
       return { accuracy, familiarity, clarity, overall };
     })(),
+    session_title: titleResult.text.trim(),
   };
 }

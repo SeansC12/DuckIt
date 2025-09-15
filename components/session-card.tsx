@@ -21,7 +21,7 @@ export default function SessionCard({
       <Card className="w-full bg-background min-w-96 max-w-lg min-h-[200px]">
         <CardHeader>
           <CardTitle className="group-hover:underline">
-            {session.annotated_transcript?.slice(0, 5)}
+            {session.session_title}
           </CardTitle>
           <CardDescription>
             {session.annotated_transcript?.slice(0, 200)}

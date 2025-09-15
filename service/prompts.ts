@@ -44,9 +44,9 @@ ${aiProcessedTranscript}
 
 Please provide your numbered explanations for each highlighted error, followed by general feedback.`;
 
-
 export const SCORE_PROMPT = (
-  annotatedTranscript: string, summary: string
+  annotatedTranscript: string,
+  summary: string,
 ) => `You are an expert evaluator assessing the quality of a user's transcript. Your main goal would be to judge how well the student recited their material.
 
 You have been given:
@@ -75,3 +75,21 @@ SUMMARY OF THE TRANSCRIPT:
 ${summary}
 
 Please provide your scores now:`;
+
+export const TITLE_PROMPT = (
+  aiProcessedTranscript: string,
+) => `You are an expert at creating concise, descriptive titles for transcripts.
+
+Your task is to generate a short title (5 words or less) that accurately captures the main topic or theme of the transcript.
+
+INSTRUCTIONS:
+- Review the raw and processed transcripts carefully
+- Identify the key subject or focus of the content
+- Create a title that is clear, engaging, and relevant to the transcript
+- Keep it very short - 5 words or less
+- Do NOT add any additional commentary or explanation - just return the title
+
+PROCESSED TRANSCRIPT:
+${aiProcessedTranscript}
+
+Generate a concise title (5 words or less) that captures the main topic:`;
